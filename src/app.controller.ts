@@ -1,5 +1,15 @@
-import { Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppService } from './app.service';
+import { CreateDto } from './dto/create.dto';
 
 @Controller('app')
 export class AppController {
@@ -11,8 +21,10 @@ export class AppController {
     // return this.appService.getHello();
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('create')
-  create() {
-    console.log('post');
+  async create(@Body() dto: CreateDto) {
+    const res = await this.appService.save(dto);
+    return res;
   }
 }
